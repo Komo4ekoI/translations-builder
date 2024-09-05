@@ -1,4 +1,6 @@
 import setuptools
+from src.translation_builder import __version__
+
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -17,6 +19,7 @@ setuptools.setup(
         "Bug Reports": "https://github.com/Komo4ekoI/translations-builder/issues",
         "Source Code": "https://github.com/Komo4ekoI/translations-builder",
     },
+    version=__version__,
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     entry_points={
