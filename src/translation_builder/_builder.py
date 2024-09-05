@@ -9,7 +9,14 @@ from .errors import InvalidNameError, DuplicateNameError
 
 
 class ClassBuilder:
-    def __init__(self, yaml_file, output_dir):
+    """
+    Base class for generate files from YAML file
+    """
+    def __init__(self, yaml_file: Path, output_dir: str):
+        """
+        :param yaml_file: YAML file path
+        :param output_dir: Final path for generated files
+        """
         self.yaml_file = yaml_file
         self.output_dir = output_dir
         self.class_names = set()
@@ -17,27 +24,56 @@ class ClassBuilder:
         self.class_name_map = {}
 
     def load_yaml(self):
+        """
+        Load YAML file
+        :return: YAML file content
+        """
         with open(self.yaml_file, "r", encoding="utf-8") as file:
             return yaml.safe_load(file)
 
     @staticmethod
     def is_valid_identifier(name: str) -> bool:
+        """
+        Check if the name is a valid Python identifier
+        :param name: The name of the variable
+        :return: True if the name is a valid Python identifier, False otherwise
+        """
         return re.match(r"^[^\d\W]\w*\Z", name) is not None
 
     @staticmethod
     def sanitize_name(name: str) -> str:
+        """
+        Replace hyphens with underscores and convert to lowercase
+        :param name: The name of the variable
+        :return: The name of the variable in snake_case
+        """
         return name.replace("-", "_").lower()
 
     @staticmethod
     def to_camel_case(name: str) -> str:
+        """
+        Convert snake_case to CamelCase
+        :param name: The name of the class
+        :return: The name of the class in CamelCase
+        """
         parts = name.split("_")
         return "".join(part.capitalize() for part in parts)
 
     def generate_unique_class_name(self, path: List[str]) -> str:
+        """
+        Generate a unique class name from the path
+        :param path: Full path to the class
+        :return: Unique class name
+        """
         sanitized_path = [self.sanitize_name(p) for p in path]
         return self.to_camel_case("_".join(sanitized_path))
 
     def validate_name(self, name: str) -> None:
+        """
+        Checks whether the class symbols match and whether a duplicate of the given key exists
+        :param name: Verify the name of the class
+        :return: None
+        """
         if not self.is_valid_identifier(name):
             raise InvalidNameError(name)
         if name in self.class_names:
@@ -45,6 +81,12 @@ class ClassBuilder:
         self.class_names.add(name)
 
     def collect_classes(self, data: Dict, path: List[str] = None) -> None:
+        """
+        Collect classes from YAML data
+        :param data:
+        :param path:
+        :return:
+        """
         if path is None:
             path = ["Root"]
 
@@ -59,6 +101,10 @@ class ClassBuilder:
                 self.collect_classes(value, new_path)
 
     def generate_class_code(self) -> str:
+        """
+        Generate Python class code from collected data
+        :return: The code of the class
+        """
         class_code = ""
         indent = "    "
 
@@ -84,7 +130,13 @@ class ClassBuilder:
 
         return class_code
 
-    def save_class_to_file(self, class_code: str, file_name: str):
+    def save_class_to_file(self, class_code: str, file_name: str) -> None:
+        """
+        Save generated class to file
+        :param class_code: The code of the class
+        :param file_name: The name of the file to save
+        :return: None
+        """
         output_file = Path(self.output_dir) / f"{file_name}.py"
 
         with open(output_file, "w", encoding="utf-8") as file:
@@ -96,7 +148,11 @@ class ClassBuilder:
         )
         print(f"Generated and formatted: {output_file}")
 
-    def generate(self):
+    def generate(self) -> None:
+        """
+        Generate Python class from YAML file
+        :return: None
+        """
         yaml_data = self.load_yaml()
         yaml_file_name = Path(self.yaml_file).stem
         py_file_name = f"{yaml_file_name.lower()}_translation"
