@@ -18,7 +18,7 @@ setuptools.setup(
         "Bug Reports": "https://github.com/Komo4ekoI/translations-builder/issues",
         "Source Code": "https://github.com/Komo4ekoI/translations-builder",
     },
-    version="1.0.1",
+    version="1.0.2",
     packages=setuptools.find_packages(where="src"),
     package_dir={"": "src"},
     entry_points={
