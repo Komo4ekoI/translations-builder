@@ -47,7 +47,7 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
         run: |
-          twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/*
           echo "Package uploaded to Test PyPI"
       - name: Upload to PyPI
         if: github.ref == 'refs/heads/main'
@@ -55,7 +55,7 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          twine upload dist/*
+          twine upload --skip-existing dist/*
           echo "Package uploaded to PyPI"
 
   release:
