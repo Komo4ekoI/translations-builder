@@ -121,7 +121,7 @@ class ClassBuilder:
             value_type = type(value).__name__
 
             if value_type == "str":
-                value = "'" + value + "'"
+                value = "'" + value.replace("\n", "\\n") + "'"
             else:
                 value = str(value)
 
