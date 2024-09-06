@@ -1,0 +1,79 @@
+name: Build, Format, and Release
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install black
+        run: pip install black
+      - name: Run black
+        run: black src/
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v4
+        with:
+          author_name: ${{ github.actor }}
+          author_email: ${{ github.actor }}@users.noreply.github.com
+          message: "Format code with black"
+          add: "."
+          branch: ${{ github.ref }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: format
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install build tools
+        run: pip install build twine
+      - name: Build package
+        run: python -m build
+      - name: Upload to Test PyPI
+        if: github.ref == 'refs/heads/dev'
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+        run: |
+          twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/*
+          echo "Package uploaded to Test PyPI"
+      - name: Upload to PyPI
+        if: github.ref == 'refs/heads/main'
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          twine upload --skip-existing dist/*
+          echo "Package uploaded to PyPI"
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get version from __init__.py
+        id: get_version
+        run: |
+          python get_version.py > version.txt
+          VERSION=$(cat version.txt)
+          echo "::set-output name=VERSION::$VERSION"
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}

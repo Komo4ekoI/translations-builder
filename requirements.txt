@@ -1,0 +1,5 @@
+PyYAML==6.0.2
+black==24.8.0
+setuptools==74.1.2
+twine==4.0.2
+build==1.2.1
