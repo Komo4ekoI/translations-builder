@@ -12,6 +12,7 @@ class ClassBuilder:
     """
     Base class for generate files from YAML file
     """
+
     def __init__(self, yaml_file: Path, output_dir: str):
         """
         :param yaml_file: YAML file path
@@ -30,6 +31,8 @@ class ClassBuilder:
         """
         with open(self.yaml_file, "r", encoding="utf-8") as file:
             return yaml.safe_load(file)
+
+    indent = "    "
 
     @staticmethod
     def is_valid_identifier(name: str) -> bool:
@@ -100,33 +103,43 @@ class ClassBuilder:
                 new_path = path + [sanitized_key]
                 self.collect_classes(value, new_path)
 
+    def process_class_stack(
+        self, class_code: str, class_name: str, data: Dict, path: List[str]
+    ) -> str:
+        class_code += f"class {class_name}:\n"
+        if not data:
+            class_code += f"{self.indent}pass\n"
+
+        for key, value in data.items():
+            sanitized_key = self.sanitize_name(key)
+
+            if isinstance(value, dict):
+                sub_class_name = self.generate_unique_class_name(path + [sanitized_key])
+                class_code += f"{self.indent}{sanitized_key} = {self.class_name_map[sub_class_name]}\n"
+                continue
+
+            value_type = type(value).__name__
+
+            if value_type == "str":
+                value = "'" + value + "'"
+            else:
+                value = str(value)
+
+            class_code += f"{self.indent}{sanitized_key}: {value_type} = {value}\n"
+
+        class_code += "\n"
+        return class_code
+
     def generate_class_code(self) -> str:
         """
         Generate Python class code from collected data
         :return: The code of the class
         """
         class_code = ""
-        indent = "    "
 
         while self.classes_stack:
             class_name, data, path = self.classes_stack.pop()
-            class_code += f"class {class_name}:\n"
-            if not data:
-                class_code += f"{indent}pass\n"
-
-            for key, value in data.items():
-                sanitized_key = self.sanitize_name(key)
-
-                if isinstance(value, dict):
-                    sub_class_name = self.generate_unique_class_name(
-                        path + [sanitized_key]
-                    )
-                    class_code += f"{indent}{sanitized_key}: type = {self.class_name_map[sub_class_name]}\n"
-                else:
-                    value_type = type(value).__name__
-                    class_code += f"{indent}{sanitized_key}: {value_type} = '{value}'\n"
-
-            class_code += "\n"
+            class_code = self.process_class_stack(class_code, class_name, data, path)
 
         return class_code
 
