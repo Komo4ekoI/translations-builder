@@ -1,5 +1,4 @@
 import setuptools
-from src.translation_builder import __version__
 
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -19,16 +18,15 @@ setuptools.setup(
         "Bug Reports": "https://github.com/Komo4ekoI/translations-builder/issues",
         "Source Code": "https://github.com/Komo4ekoI/translations-builder",
     },
-    version=__version__,
-    package_dir={"": "src"},
+    version="1.0.0",
     packages=setuptools.find_packages(where="src"),
+    package_dir={"": "src"},
     entry_points={
         "console_scripts": [
             "g-translation=translation_builder.__main__:main",
         ],
     },
     classifiers=[
-        # https://pypi.org/classifiers/
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Topic :: Communications",
@@ -44,5 +42,8 @@ setuptools.setup(
         "Topic :: Software Development :: Code Generators",
     ],
     python_requires=">=3.7",
-    extras_require={"PyYAML": "6.0.2", "black": "24.8.0"},
+    install_requires=["PyYAML==6.0.2", "black==24.8.0"],
+    extras_require={
+        "dev": ["check-manifest"],
+    },
 )
