@@ -1,5 +1,5 @@
 
-![PyPI - Downloads](https://img.shields.io/pypi/dd/translation-builder)![PyPI - Version](https://img.shields.io/pypi/v/translation-builder)[![wakatime](https://wakatime.com/badge/user/90c8afe4-47c1-4f14-9423-4474ab0618ae/project/2a4d5581-e29c-4cd6-b898-103f15fa8b1b.svg)](https://wakatime.com/badge/user/90c8afe4-47c1-4f14-9423-4474ab0618ae/project/2a4d5581-e29c-4cd6-b898-103f15fa8b1b)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/translation-builder)![PyPI - Version](https://img.shields.io/pypi/v/translation-builder)[![wakatime](https://wakatime.com/badge/user/90c8afe4-47c1-4f14-9423-4474ab0618ae/project/2a4d5581-e29c-4cd6-b898-103f15fa8b1b.svg)](https://wakatime.com/badge/user/90c8afe4-47c1-4f14-9423-4474ab0618ae/project/2a4d5581-e29c-4cd6-b898-103f15fa8b1b)
 
 
 ## INFO
