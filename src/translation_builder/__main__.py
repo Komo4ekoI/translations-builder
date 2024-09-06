@@ -8,7 +8,7 @@ from ._builder import ClassBuilder
 def main():
     parser = argparse.ArgumentParser(description="Generate Python class from YAML")
     parser.add_argument(
-        "--yaml_file",
+        "--file",
         type=str,
         help="Path to the YAML file",
     )
