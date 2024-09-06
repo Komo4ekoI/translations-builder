@@ -9,6 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate Python class from YAML")
     parser.add_argument(
         "--file",
+        dest="yaml_file",
         type=str,
         help="Path to the YAML file",
     )
