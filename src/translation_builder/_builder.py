@@ -168,10 +168,10 @@ class ClassBuilder:
         """
         yaml_data = self.load_yaml()
         yaml_file_name = Path(self.yaml_file).stem
-        py_file_name = f"{yaml_file_name.lower()}_translation"
 
         self.collect_classes(yaml_data)
 
         class_code = self.generate_class_code()
 
+        py_file_name = f"{yaml_file_name.lower()}_tg"
         self.save_class_to_file(class_code, py_file_name)
