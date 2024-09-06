@@ -29,7 +29,6 @@ setuptools.setup(
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
-        "Topic :: Communications",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
@@ -43,7 +42,4 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
     install_requires=["PyYAML==6.0.2", "black==24.8.0"],
-    extras_require={
-        "dev": ["check-manifest"],
-    },
 )
