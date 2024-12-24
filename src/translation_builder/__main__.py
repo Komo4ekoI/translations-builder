@@ -35,7 +35,9 @@ def main():
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     if args.from_dir:
-        yaml_files = Path(args.from_dir).glob("*.yml")
+        yaml_files = list(Path(args.from_dir).rglob("*.yaml")) + list(
+            Path(args.from_dir).rglob("*.yml")
+        )
 
         for yaml_file in yaml_files:
             try:
