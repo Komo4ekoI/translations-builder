@@ -1,8 +1,12 @@
 import argparse
+import logging
 from pathlib import Path
 
 from .errors import InvalidNameError, DuplicateNameError
 from ._builder import ClassBuilder
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -35,9 +39,8 @@ def main():
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     if args.from_dir:
-        yaml_files = list(Path(args.from_dir).rglob("*.yaml")) + list(
-            Path(args.from_dir).rglob("*.yml")
-        )
+        yaml_files = [file for file in Path(args.from_dir).glob("*") if file.suffix in {".yaml", ".yml"}]
+        logger.info(f"Found {len(yaml_files)} YAML files in {args.from_dir} Files: {yaml_files}")
 
         for yaml_file in yaml_files:
             try:
